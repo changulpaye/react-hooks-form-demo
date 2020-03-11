@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { DevTool } from "react-hook-form-devtools";
+import Select from "./Select";
+import Input from "./Input";
 
 const LoginForm = () => {
   const { handleSubmit, register, errors, control, formState } = useForm({
@@ -22,7 +24,8 @@ const LoginForm = () => {
     console.log(result);
   };
 
-  const toggleValidation = () => {
+  const toggleValidation = e => {
+    e.preventDefault();
     setFormValidation({
       isEmailRequired: !formValidation.isEmailRequired,
       isPasswordRequired: !formValidation.isPasswordRequired,
@@ -34,69 +37,50 @@ const LoginForm = () => {
       <h5 className="card-header">Login</h5>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="card-body">
-          <div className="form-group">
-            <label htmlFor="email">
-              Email
-              {formValidation.isEmailRequired && (
-                <span style={{ color: "red" }}>*</span>
-              )}
-            </label>
-            <input
-              type="text"
-              placeholder="Email"
-              name="email"
-              className="form-control"
-              ref={register({
-                required: {
-                  value: formValidation.isEmailRequired,
-                  message: "Email is required",
-                },
-                pattern: {
-                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
-                  message: "Invalid email address",
-                },
-                minLength: {
-                  value: 8,
-                  message: "Minimum length should 8 character",
-                },
-              })}
-            />
-            {errors.email && (
-              <div className="alert alert-danger mt-2">
-                {errors.email.message}
-              </div>
-            )}
-          </div>
+          <Input
+            isRequired={formValidation.isEmailRequired}
+            errors={errors.email}
+            ref={register}
+            label="Email"
+            placeholder="Enter Email"
+            type="email"
+            controlName="email"
+            validation={{
+              required: {
+                value: formValidation.isEmailRequired,
+                message: "Email is required",
+              },
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+                message: "Invalid email address",
+              },
+            }}
+          />
 
-          <div className="form-group">
-            <label htmlFor="password">
-              Password
-              {formValidation.isPasswordRequired && (
-                <span style={{ color: "red" }}>*</span>
-              )}
-            </label>
-            <input
-              className="form-control"
-              type="password"
-              placeholder="Password"
-              name="password"
-              ref={register({
-                required: {
-                  value: formValidation.isEmailRequired,
-                  message: "Password is required",
-                },
-                minLength: {
-                  value: 8,
-                  message: "Minimum password length should 8 character",
-                },
-              })}
-            />
-            {errors.password && (
-              <div className="alert alert-danger mt-2">
-                {errors.password.message}
-              </div>
-            )}
-          </div>
+          <Input
+            isRequired={formValidation.isPasswordRequired}
+            errors={errors.password}
+            ref={register}
+            label="Password"
+            placeholder="Enter Password"
+            type="password"
+            controlName="password"
+            validation={{
+              required: {
+                value: formValidation.isPasswordRequired,
+                message: "Password is required",
+              },
+              minLength: {
+                value: 8,
+                message: "Minimum password length should 8 character",
+              },
+            }}
+          />
+          <Select
+            label="Select Age Range"
+            ref={register}
+            options={["10 - 20", "20 - 30", "30 - 40"]}
+          />
         </div>
 
         <div className="card-footer text-right">
